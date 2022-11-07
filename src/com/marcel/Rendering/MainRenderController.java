@@ -256,6 +256,18 @@ public class MainRenderController
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                LogicComponent last = canvas.mainWindowRenderer.GetComponentAt(canvas.mouseX, canvas.mouseY);
+                if (last != null && dragCable &&  dragCableFromOutputIndex != -1)
+                {
+                    int sIndex = canvas.mainWindowRenderer.GetComponentInputIndexAt(last, canvas.mouseX, canvas.mouseY);
+
+                    if (sIndex != -1)
+                    {
+                        System.out.println("CONNECTION!");
+                        selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
+                        last.inputGates.set(sIndex, selectedComponent);
+                    }
+                }
                 dragComponent = false;
                 dragCable = false;
             }

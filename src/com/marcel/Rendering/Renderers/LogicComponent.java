@@ -151,7 +151,7 @@ public class LogicComponent
         if (index == -1)
             return;
         inputs.set(index, state);
-        UpdateOutputState();
+        //UpdateOutputState();
     }
 
     public void UpdateGate()
