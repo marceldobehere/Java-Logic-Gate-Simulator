@@ -38,6 +38,7 @@ public class ThemeStuff
         LogicComponent.OrImage = new ImageIcon(FileStuff.LogicGateImageFolderPath+"OR.png").getImage();
         LogicComponent.NotImage = new ImageIcon(FileStuff.LogicGateImageFolderPath+"NOT.png").getImage();
         LogicComponent.SwitchImage = new ImageIcon(FileStuff.LogicGateImageFolderPath+"SWITCH.png").getImage();
+        LogicComponent.ButtonImage = new ImageIcon(FileStuff.LogicGateImageFolderPath+"BUTTON.png").getImage();
         LogicComponent.LedImage = new ImageIcon(FileStuff.LogicGateImageFolderPath+"LED.png").getImage();
     }
 }

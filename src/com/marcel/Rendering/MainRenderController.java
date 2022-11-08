@@ -20,7 +20,7 @@ public class MainRenderController
             canvas.sidebarRenderer.shrinkSidebar = !canvas.sidebarRenderer.shrinkSidebar;
         }
         else if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_3 ||
-                 e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_5)
+                 e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_5 || e.getKeyCode() == KeyEvent.VK_6)
         {
             float newZoom = canvas.mainWindowRenderer.zoomLevel;
 
@@ -43,6 +43,8 @@ public class MainRenderController
             if (e.getKeyCode() == KeyEvent.VK_4)
                 type = LogicComponent.ComponentType.SWITCH;
             if (e.getKeyCode() == KeyEvent.VK_5)
+                type = LogicComponent.ComponentType.BUTTON;
+            if (e.getKeyCode() == KeyEvent.VK_6)
                 type = LogicComponent.ComponentType.LED;
 
             canvas.mainWindowRenderer.logicGates.add(new LogicComponent(type, new DPos(mPosX3, mPosY3)));
@@ -183,7 +185,27 @@ public class MainRenderController
         {
             int sIndex = canvas.mainWindowRenderer.GetComponentOutputIndexAt(selectedComponent, nMouseX, nMouseY);
             if (sIndex == -1)
-                dragComponent = true;
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    dragComponent = true;
+                }
+                else if (e.getButton() == MouseEvent.BUTTON2)
+                {
+                    canvas.mainWindowRenderer.deleteComponent(selectedComponent);
+                }
+                else
+                {
+                    if (selectedComponent.type == LogicComponent.ComponentType.SWITCH)
+                    {
+                        selectedComponent.basicState = !selectedComponent.basicState;
+                    }
+                    else if (selectedComponent.type == LogicComponent.ComponentType.BUTTON)
+                    {
+                        selectedComponent.basicState = true;
+                    }
+                }
+            }
             else
             {
                 dragComponent = false;
@@ -205,7 +227,7 @@ public class MainRenderController
 
     public static void main()
     {
-        jFrame = new JFrame("Logic Gate Simulator v0.05");
+        jFrame = new JFrame("Logic Gate Simulator v0.07");
         Container pane = jFrame.getContentPane();
         allowDrawing = false;
 
@@ -257,15 +279,23 @@ public class MainRenderController
             @Override
             public void mouseReleased(MouseEvent e) {
                 LogicComponent last = canvas.mainWindowRenderer.GetComponentAt(canvas.mouseX, canvas.mouseY);
-                if (last != null && dragCable &&  dragCableFromOutputIndex != -1)
+                if (last != null)
                 {
-                    int sIndex = canvas.mainWindowRenderer.GetComponentInputIndexAt(last, canvas.mouseX, canvas.mouseY);
-
-                    if (sIndex != -1)
+                    if (last.type == LogicComponent.ComponentType.BUTTON)
                     {
-                        System.out.println("CONNECTION!");
-                        selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
-                        last.inputGates.set(sIndex, selectedComponent);
+                        last.basicState = false;
+                    }
+
+                    if (dragCable &&  dragCableFromOutputIndex != -1)
+                    {
+                        int sIndex = canvas.mainWindowRenderer.GetComponentInputIndexAt(last, canvas.mouseX, canvas.mouseY);
+
+                        if (sIndex != -1)
+                        {
+                            System.out.println("CONNECTION!");
+                            selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
+                            last.inputGates.set(sIndex, selectedComponent);
+                        }
                     }
                 }
                 dragComponent = false;

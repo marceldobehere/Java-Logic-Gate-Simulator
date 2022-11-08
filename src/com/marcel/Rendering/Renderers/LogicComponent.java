@@ -16,6 +16,7 @@ public class LogicComponent
 
         SWITCH,
         LED,
+        BUTTON,
 
 
         CUSTOM
@@ -25,6 +26,7 @@ public class LogicComponent
     public static Image OrImage = null;
     public static Image NotImage = null;
     public static Image SwitchImage = null;
+    public static Image ButtonImage = null;
     public static Image LedImage = null;
 
     public DPos pos;
@@ -33,6 +35,7 @@ public class LogicComponent
     public int height;
     public boolean basicState;
     public boolean isBasic;
+    public boolean drawThing = false;
     public ComponentType type;
 
     public List<Boolean> inputs = new ArrayList<>();
@@ -53,30 +56,42 @@ public class LogicComponent
             inputCount = 2;
             outputCount = 1;
             isBasic = true;
+            drawThing = true;
         }
         else if (type == ComponentType.NOT)
         {
             inputCount = 1;
             outputCount = 1;
             isBasic = true;
+            drawThing = true;
         }
         else if (type == ComponentType.LED)
         {
             inputCount = 1;
             outputCount = 0;
             isBasic = true;
+            drawThing = true;
         }
         else if (type == ComponentType.SWITCH)
         {
             inputCount = 0;
             outputCount = 1;
             isBasic = true;
+            drawThing = true;
+        }
+        else if (type == ComponentType.BUTTON)
+        {
+            inputCount = 0;
+            outputCount = 1;
+            isBasic = true;
+            drawThing = true;
         }
         else if (type == ComponentType.CUSTOM)
         {
             height = 100;
             inputCount = 5;
             outputCount = 3;
+            drawThing = true;
         }
 
         ResetInputs();
@@ -117,6 +132,8 @@ public class LogicComponent
         else if (type == ComponentType.LED)
             basicState = inputs.get(0);
         else if (type == ComponentType.SWITCH)
+            ;
+        else if (type == ComponentType.BUTTON)
             ;
         else
             basicState = false;
