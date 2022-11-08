@@ -22,8 +22,15 @@ public class MainWindowRenderer {
 
     public void init()
     {
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(80, 50)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(200, 50)));
+        //logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(80, 50)));
+        //logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(200, 50)));
+
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 50)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 150)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 50)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 150)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 50)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 150)));
     }
 
     public void draw(Graphics2D g2)
@@ -146,6 +153,38 @@ public class MainWindowRenderer {
     public void deleteComponent(LogicComponent gate)
     {
         System.out.println("deleting component...");
+        for (int i1 = 0; i1 < gate.inputGates.size(); i1++)
+        {
+            LogicComponent temp = gate.inputGates.get(i1);
+            for (int i2 = 0; i2 < temp.outputGates.size(); i2++)
+            {
+                while (temp.outputGates.get(i2).remove(gate))
+                {
+                    //System.out.println("del 1 1");
+                }
+            }
+            temp.UpdateGate();
+            //System.out.println("del 1");
+        }
+
+        for (int i1 = 0; i1 < gate.outputGates.size(); i1++)
+        {
+            List<LogicComponent> tempList = gate.outputGates.get(i1);
+            for (int i2 = 0; i2 < tempList.size(); i2++)
+            {
+                LogicComponent temp = tempList.get(i2);
+                while(temp.inputGates.contains(gate))
+                {
+                    int tIndex = temp.inputGates.indexOf(gate);
+                    temp.inputGates.set(tIndex, null);
+                    temp.inputs.set(tIndex, false);
+                    //System.out.println("del 2 2");
+                }
+                temp.UpdateGate();
+                //System.out.println("del 2");
+            }
+        }
+
 
         logicGates.remove(gate);
 
