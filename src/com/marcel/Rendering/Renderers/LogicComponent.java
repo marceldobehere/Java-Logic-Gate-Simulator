@@ -22,6 +22,28 @@ public class LogicComponent
         CUSTOM
     }
 
+    public static ComponentType GetCompTypeFromString(String data)
+    {
+        if (data.equals("AND"))
+            return ComponentType.AND;
+        if (data.equals("OR"))
+            return ComponentType.OR;
+        if (data.equals("NOT"))
+            return ComponentType.NOT;
+
+        if (data.equals("SWITCH"))
+            return ComponentType.SWITCH;
+        if (data.equals("LED"))
+            return ComponentType.LED;
+        if (data.equals("BUTTON"))
+            return ComponentType.BUTTON;
+
+        if (data.equals("CUSTOM"))
+            return ComponentType.CUSTOM;
+
+        return ComponentType.CUSTOM;
+    }
+
     public static Image AndImage = null;
     public static Image OrImage = null;
     public static Image NotImage = null;
@@ -43,6 +65,11 @@ public class LogicComponent
     public List<Boolean> outputs = new ArrayList<>();
     public List<List<LogicComponent>> outputGates = new ArrayList<>();
     public int outputCount;
+
+    public LogicComponent()
+    {
+
+    }
 
     public LogicComponent(ComponentType type, DPos pos)
     {

@@ -9,7 +9,7 @@ public class DPos {
         y = 0;
     }
 
-    public DPos(float x, float y)
+    public DPos(double x, double y)
     {
         this.x = x;
         this.y = y;

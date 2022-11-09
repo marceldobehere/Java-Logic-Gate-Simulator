@@ -1,6 +1,9 @@
 package com.marcel.Rendering;
 
+import com.marcel.ParsingAndStuff.LoadLogic;
+import com.marcel.ParsingAndStuff.SaveLogic;
 import com.marcel.Rendering.Renderers.LogicComponent;
+import com.marcel.Rendering.Renderers.TopMenuRenderer;
 import com.marcel.Rendering.Utils.DPos;
 
 import javax.swing.*;
@@ -148,6 +151,23 @@ public class MainRenderController
 
     public static void HandleMousePreClick(MouseEvent e)
     {
+        if (canvas.topMenuRenderer.selectedText != TopMenuRenderer.SelectedTextEnum.NONE)
+        {
+            if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.SAVE)
+            {
+                SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, "test.txt");
+            }
+            else if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.LOAD)
+            {
+                LoadLogic.LoadSave("test.txt");
+            }
+
+            return;
+        }
+
+
+
+
         PointerInfo a = MouseInfo.getPointerInfo();
         Point b = a.getLocation();
         int nMouseX = (int) b.getX() - canvas.getLocationOnScreen().x;

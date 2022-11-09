@@ -1,6 +1,7 @@
 package com.marcel.Rendering.Utils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +27,19 @@ public class FileStuff
         {
             System.out.println("ERROR: " + exception);
             return null;
+        }
+    }
+
+    public static void WriteFile(String pathString, String data)
+    {
+        Path path = Paths.get(pathString);
+        try
+        {
+            Files.write(path, data.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (IOException exception)
+        {
+            System.out.println("ERROR: " + exception);
         }
     }
 }
