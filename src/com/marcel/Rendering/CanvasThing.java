@@ -135,14 +135,14 @@ public class CanvasThing extends JComponent
     public void renderTempLine(Graphics2D g2)
     {
         {
-            int sX = (int)((MainRenderController.cableFrom.x - mainWindowRenderer.scrollX) * mainWindowRenderer.zoomLevel + mainWindowRenderer.mainRect.x1);
-            int sY = (int)((MainRenderController.cableFrom.y - mainWindowRenderer.scrollY) * mainWindowRenderer.zoomLevel + mainWindowRenderer.mainRect.y1);
+            double sX = ((MainRenderController.cableFrom.x - mainWindowRenderer.scrollX) * mainWindowRenderer.zoomLevel + mainWindowRenderer.mainRect.x1);
+            double sY = ((MainRenderController.cableFrom.y - mainWindowRenderer.scrollY) * mainWindowRenderer.zoomLevel + mainWindowRenderer.mainRect.y1);
 
             g2.setStroke(new BasicStroke(4 * mainWindowRenderer.zoomLevel));
             g2.setColor(Color.orange);
             g2.drawLine(mouseX, mouseY,
-                    (sX + (int)(2.5 * mainWindowRenderer.zoomLevel)),
-                    (sY + (int)(2.5 * mainWindowRenderer.zoomLevel))
+                    (int)(sX + (0 * mainWindowRenderer.zoomLevel)),
+                    (int)(sY + (0 * mainWindowRenderer.zoomLevel))
             );
         }
     }

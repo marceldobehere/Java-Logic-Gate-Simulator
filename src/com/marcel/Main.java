@@ -34,15 +34,15 @@ public class Main {
                 MainRenderController.canvas.update();
                 MainRenderController.updateSelectedComponentPosition();
 
-//                try
-//                {
-//                    Thread.sleep(25);
-//                }
-//                catch(InterruptedException ex)
-//                {
-//                    Thread.currentThread().interrupt();
-//                    System.out.println("BRUH");
-//                }
+                try
+                {
+                    Thread.sleep(10);
+                }
+                catch(InterruptedException ex)
+                {
+                    Thread.currentThread().interrupt();
+                    System.out.println("BRUH");
+                }
             }
             double dur = (System.currentTimeMillis() - startTime) / 1000.0;
 

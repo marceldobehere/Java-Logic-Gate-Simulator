@@ -211,8 +211,16 @@ public class MainRenderController
                 dragComponent = false;
                 dragCable = true;
                 dragCableFromOutputIndex = sIndex;
-                cableFrom.x = mPosX3;
-                cableFrom.y = mPosY3;
+                DPos startingFrom = canvas.mainWindowRenderer.GetOutputPos(selectedComponent, sIndex);
+
+                double cPosX0 = startingFrom.x - canvas.mainWindowRenderer.mainRect.x1;
+                double cPosY0 = startingFrom.y - canvas.mainWindowRenderer.mainRect.y1;
+
+                double cPosX3 = (cPosX0 / newZoom) + scrollX;
+                double cPosY3 = (cPosY0 / newZoom) + scrollY;
+
+                cableFrom.x = cPosX3;//mPosX3;
+                cableFrom.y = cPosY3;//mPosY3;
                 //System.out.println("Drag cable moment!");
             }
         }
