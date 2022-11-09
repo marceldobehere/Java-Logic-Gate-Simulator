@@ -28,7 +28,7 @@ public class MainWindowRenderer {
         logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 50)));
         logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 150)));
         logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 50)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 150)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(180, 150)));
         logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 50)));
         logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 150)));
     }
@@ -66,7 +66,7 @@ public class MainWindowRenderer {
                     if (component.inputGates.get(i3) != gate)
                         continue;
 
-                    g2.setStroke(new BasicStroke(4));
+                    g2.setStroke(new BasicStroke(3 * zoomLevel));
                     if (gate.outputs.get(i1))
                         g2.setColor(Color.GREEN);
                     else
