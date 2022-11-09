@@ -31,14 +31,16 @@ public class CanvasThing extends JComponent
         {
             if (sidebarRenderer.sidebarWidth > 0)
                 sidebarRenderer.sidebarWidth -= deltaTime * (int)(sidebarRenderer.maxSidebarWidth * 5);
-            else
+
+            if (sidebarRenderer.sidebarWidth < 0)
                 sidebarRenderer.sidebarWidth = 0;
         }
         else
         {
             if (sidebarRenderer.sidebarWidth < sidebarRenderer.maxSidebarWidth)
                 sidebarRenderer.sidebarWidth += deltaTime * (int)(sidebarRenderer.maxSidebarWidth * 5);
-            else
+
+            if (sidebarRenderer.sidebarWidth > sidebarRenderer.maxSidebarWidth)
                 sidebarRenderer.sidebarWidth = sidebarRenderer.maxSidebarWidth;
         }
 

@@ -128,6 +128,8 @@ public class MainWindowRenderer {
         for (int t = logicGates.size() - 1; t >= 0; t--)
         {
             LogicComponent gate = logicGates.get(t);
+            if (gate == null)
+                continue;
 
 
             if (IsBasicType(gate.type))
@@ -156,6 +158,8 @@ public class MainWindowRenderer {
         for (int i1 = 0; i1 < gate.inputGates.size(); i1++)
         {
             LogicComponent temp = gate.inputGates.get(i1);
+            if (temp == null)
+                continue;
             for (int i2 = 0; i2 < temp.outputGates.size(); i2++)
             {
                 while (temp.outputGates.get(i2).remove(gate))

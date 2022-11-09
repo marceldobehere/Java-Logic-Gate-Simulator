@@ -213,7 +213,7 @@ public class MainRenderController
                 dragCableFromOutputIndex = sIndex;
                 cableFrom.x = mPosX3;
                 cableFrom.y = mPosY3;
-                System.out.println("Drag cable moment!");
+                //System.out.println("Drag cable moment!");
             }
         }
 
@@ -227,7 +227,7 @@ public class MainRenderController
 
     public static void main()
     {
-        jFrame = new JFrame("Logic Gate Simulator v0.07");
+        jFrame = new JFrame("Logic Gate Simulator");
         Container pane = jFrame.getContentPane();
         allowDrawing = false;
 
@@ -292,7 +292,7 @@ public class MainRenderController
 
                         if (sIndex != -1)
                         {
-                            System.out.println("CONNECTION!");
+                            //System.out.println("CONNECTION!");
                             selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
                             last.inputGates.set(sIndex, selectedComponent);
                         }
