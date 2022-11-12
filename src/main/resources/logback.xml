@@ -1,0 +1,14 @@
+<configuration>
+    <property scope="context" name="COLORIZER_COLORS" value="red@,yellow@,green@,blue@,cyan@" />
+    <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%colorize([%thread] %-5level %logger{36} - %msg%n)</pattern>
+        </encoder> <!--%d{HH:mm:ss.SSS} -->
+    </appender>
+
+    <root level="trace"> <!-- Level ab wann die Sachen gezeigt werden -->
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

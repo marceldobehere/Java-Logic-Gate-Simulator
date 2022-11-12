@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Logic Gate Simulator:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Logic_Gate_Simulator_jar</output-path>
-    <root id="archive" name="Logic Gate Simulator.jar">
-      <element id="module-output" name="Logic Gate Simulator" />
-    </root>
-  </artifact>
-</component>
