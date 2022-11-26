@@ -128,7 +128,6 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -142,8 +141,7 @@ replay_pid*
 
 ### Gradle ###
 .gradle
-**/build/
-!src/**/build/
+
 
 # Ignore Gradle GUI config
 gradle-app.setting
