@@ -2,6 +2,7 @@ package com.marcel.Rendering;
 
 import com.marcel.ParsingAndStuff.LoadLogic;
 import com.marcel.ParsingAndStuff.SaveLogic;
+import com.marcel.Rendering.renderers.ComponentConnection;
 import com.marcel.Rendering.renderers.LogicComponent;
 import com.marcel.Rendering.renderers.TopMenuRenderer;
 import com.marcel.Rendering.utils.DPos;
@@ -50,7 +51,7 @@ public class MainRenderController
             if (e.getKeyCode() == KeyEvent.VK_6)
                 type = LogicComponent.ComponentType.LED;
 
-            canvas.mainWindowRenderer.logicGates.add(new LogicComponent(type, new DPos(mPosX3, mPosY3)));
+            canvas.mainWindowRenderer.logicGates.add(new LogicComponent(type, new DPos(mPosX3, mPosY3), canvas.mainWindowRenderer));
 
         }
     }
@@ -155,11 +156,13 @@ public class MainRenderController
         {
             if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.SAVE)
             {
-                SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, "test.txt");
+                //SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, "test.txt");
+                System.out.println("SAVING....");
             }
             else if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.LOAD)
             {
-                LoadLogic.LoadSave("test.txt");
+                //LoadLogic.LoadSave("test.txt");
+                System.out.println("LOADING....");
             }
 
             return;
@@ -321,8 +324,9 @@ public class MainRenderController
                         if (sIndex != -1)
                         {
                             //System.out.println("CONNECTION!");
-                            selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
-                            last.inputGates.set(sIndex, selectedComponent);
+                            //selectedComponent.outputGates.get(dragCableFromOutputIndex).add(last);
+                            //last.inputGates.set(sIndex, selectedComponent);
+                            selectedComponent.cont.connections.add(new ComponentConnection(selectedComponent, dragCableFromOutputIndex, last, sIndex));
                         }
                     }
                 }

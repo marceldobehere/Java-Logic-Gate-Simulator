@@ -19,18 +19,16 @@ public class MainWindowRenderer {
     public float oldZoom = 1;
 
     public List<LogicComponent> logicGates = new ArrayList<LogicComponent>();
+    public List<ComponentConnection> connections = new ArrayList<>();
 
     public void init()
     {
-        //logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(80, 50)));
-        //logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(200, 50)));
-
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 50)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 150)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 50)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(180, 150)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 50)));
-        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 150)));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 50), this));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.SWITCH, new DPos(50, 150), this));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.AND, new DPos(180, 50), this));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.OR, new DPos(180, 150), this));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 50), this));
+        logicGates.add(new LogicComponent(LogicComponent.ComponentType.LED, new DPos(310, 150), this));
     }
 
     public void draw(Graphics2D g2)
@@ -43,49 +41,34 @@ public class MainWindowRenderer {
 
     public void drawWires(Graphics2D g2)
     {
-        for (LogicComponent gate : logicGates)
+        for (ComponentConnection conn : connections)
         {
-            drawWire(g2, gate);
+            drawWire(g2, conn);
         }
     }
 
-    public void drawWire(Graphics2D g2, LogicComponent gate)
+    public void drawWire(Graphics2D g2, ComponentConnection conn)
     {
-        if (!gate.drawThing)
+        if (conn.fromComponent == null || conn.toComponent == null)
             return;
 
-        for (int i1 = 0; i1 < gate.outputCount; i1++)
-        {
-            DPos startPos = GetOutputPos(gate, i1);
-            List<LogicComponent> components = gate.outputGates.get(i1);
-            for (int i2 = 0; i2 < components.size(); i2++)
-            {
-                LogicComponent component = components.get(i2);
-                for (int i3 = 0; i3 < component.inputCount; i3++)
-                {
-                    if (component.inputGates.get(i3) != gate)
-                        continue;
+        if (!conn.fromComponent.drawThing || !conn.toComponent.drawThing)
+            return;
 
-                    g2.setStroke(new BasicStroke(3 * zoomLevel));
-                    if (gate.outputs.get(i1))
-                        g2.setColor(Color.GREEN);
-                    else
-                        g2.setColor(Color.RED);
-                    DPos endPos = GetInputPos(component, i3);
-                    g2.drawLine(
-                            (int)(startPos.x),
-                            (int)(startPos.y),
-                            (int)(endPos.x),
-                            (int)(endPos.y)
-                    );
-                }
-            }
-        }
+        DPos startPos = GetOutputPos(conn.fromComponent, conn.fromComponentIndex);
+        DPos endPos = GetInputPos(conn.toComponent, conn.toComponentIndex);
 
-
-
-
-
+        g2.setStroke(new BasicStroke(3 * zoomLevel));
+        if (conn.fromComponent.outputs.get(conn.fromComponentIndex))
+            g2.setColor(Color.GREEN);
+        else
+            g2.setColor(Color.RED);
+        g2.drawLine(
+                (int)(startPos.x),
+                (int)(startPos.y),
+                (int)(endPos.x),
+                (int)(endPos.y)
+        );
     }
 
     public void drawGates(Graphics2D g2)
@@ -155,40 +138,16 @@ public class MainWindowRenderer {
     public void deleteComponent(LogicComponent gate)
     {
         System.out.println("deleting component...");
-        for (int i1 = 0; i1 < gate.inputGates.size(); i1++)
-        {
-            LogicComponent temp = gate.inputGates.get(i1);
-            if (temp == null)
-                continue;
-            for (int i2 = 0; i2 < temp.outputGates.size(); i2++)
-            {
-                while (temp.outputGates.get(i2).remove(gate))
-                {
-                    //System.out.println("del 1 1");
-                }
-            }
-            temp.UpdateGate();
-            //System.out.println("del 1");
-        }
 
-        for (int i1 = 0; i1 < gate.outputGates.size(); i1++)
+        for (int i = 0; i < connections.size(); i++)
         {
-            List<LogicComponent> tempList = gate.outputGates.get(i1);
-            for (int i2 = 0; i2 < tempList.size(); i2++)
+            ComponentConnection conn = connections.get(i);
+            if (conn.fromComponent == gate || conn.toComponent == gate)
             {
-                LogicComponent temp = tempList.get(i2);
-                while(temp.inputGates.contains(gate))
-                {
-                    int tIndex = temp.inputGates.indexOf(gate);
-                    temp.inputGates.set(tIndex, null);
-                    temp.inputs.set(tIndex, false);
-                    //System.out.println("del 2 2");
-                }
-                temp.UpdateGate();
-                //System.out.println("del 2");
+                connections.remove(conn);
+                i--;
             }
         }
-
 
         logicGates.remove(gate);
 

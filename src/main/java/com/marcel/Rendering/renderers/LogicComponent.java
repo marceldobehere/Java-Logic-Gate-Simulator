@@ -54,6 +54,7 @@ public class LogicComponent
     public DPos pos;
 
     public int inputCount;
+    public int outputCount;
     public int height;
     public boolean basicState;
     public boolean isBasic;
@@ -61,18 +62,20 @@ public class LogicComponent
     public ComponentType type;
 
     public List<Boolean> inputs = new ArrayList<>();
-    public List<LogicComponent> inputGates = new ArrayList<>();
     public List<Boolean> outputs = new ArrayList<>();
-    public List<List<LogicComponent>> outputGates = new ArrayList<>();
-    public int outputCount;
 
-    public LogicComponent()
+    public MainWindowRenderer cont;
+
+
+
+    public LogicComponent(MainWindowRenderer cont)
     {
-
+this.cont = cont;
     }
 
-    public LogicComponent(ComponentType type, DPos pos)
+    public LogicComponent(ComponentType type, DPos pos, MainWindowRenderer cont)
     {
+        this.cont = cont;
         this.type = type;
         this.pos = pos;
         height = AndImage.getHeight(null);
@@ -129,23 +132,15 @@ public class LogicComponent
     public void ResetInputs()
     {
         inputs.clear();
-        inputGates.clear();
         for (int i = 0; i < inputCount; i++)
-        {
             inputs.add(false);
-            inputGates.add(null);
-        }
     }
 
     public void ResetOutputs()
     {
-        outputGates.clear();
         outputs.clear();
         for (int i = 0; i < outputCount; i++)
-        {
-            outputGates.add(new ArrayList<>());
             outputs.add(false);
-        }
     }
 
     public void CalcState()
@@ -185,17 +180,17 @@ public class LogicComponent
     public void UpdateOutput(int index, boolean state)
     {
         outputs.set(index, state);
-        for (int i2 = 0; i2 < outputGates.get(index).size(); i2++)
-            outputGates.get(index).get(i2).UpdateInput(this, state);
+        for (int i = 0; i < cont.connections.size(); i++)
+        {
+            ComponentConnection conn = cont.connections.get(i);
+            if (conn.fromComponent == this && conn.fromComponentIndex == index)
+                conn.toComponent.inputs.set(conn.toComponentIndex, state);
+        }
     }
 
-    public void UpdateInput(LogicComponent gate, boolean state)
+    public void UpdateInput(ComponentConnection conn, boolean state)
     {
-        int index = inputGates.indexOf(gate);
-        if (index == -1)
-            return;
-        inputs.set(index, state);
-        //UpdateOutputState();
+        inputs.set(conn.toComponentIndex, state);
     }
 
     public void UpdateGate()
