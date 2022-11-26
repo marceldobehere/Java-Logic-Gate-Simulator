@@ -16,9 +16,12 @@ right click - toggle component (like switch/button)
 
 left drag - drag component or wire from component
 
-middle click - delete component
+middle click - delete component or wire
 
 
 
 1-6 spawn gates at mouse pos
 
+
+## JAR FILE
+[The JAR file is here](build/libs/Logic%20Gate%20Simulator%20Gradle-1.0-SNAPSHOT.jar)
