@@ -157,12 +157,12 @@ public class MainRenderController
         {
             if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.SAVE)
             {
-                //SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, "test.txt");
+                SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, canvas.mainWindowRenderer.connections, "test.txt");
                 System.out.println("SAVING....");
             }
             else if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.LOAD)
             {
-                //LoadLogic.LoadSave("test.txt");
+                LoadLogic.LoadSave("test.txt");
                 System.out.println("LOADING....");
             }
 
