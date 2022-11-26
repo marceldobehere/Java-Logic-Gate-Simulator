@@ -144,6 +144,7 @@ public class MainWindowRenderer {
             ComponentConnection conn = connections.get(i);
             if (conn.fromComponent == gate || conn.toComponent == gate)
             {
+                conn.toComponent.inputs.set(conn.toComponentIndex, false);
                 connections.remove(conn);
                 i--;
             }
