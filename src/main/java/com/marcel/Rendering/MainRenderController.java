@@ -10,6 +10,7 @@ import com.marcel.Rendering.utils.DPos;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Line2D;
 
 public class MainRenderController
 {
@@ -203,6 +204,38 @@ public class MainRenderController
             selectedComponentOffset.y = 0;
         }
 
+
+        if (e.getButton() == MouseEvent.BUTTON2)
+        {
+            for (int i = 0; i < canvas.mainWindowRenderer.connections.size(); i++)
+            {
+                ComponentConnection x = canvas.mainWindowRenderer.connections.get(i);
+
+                if (x.fromComponent == null || x.toComponent == null)
+                    continue;
+                if (!x.fromComponent.drawThing || !x.toComponent.drawThing)
+                    continue;
+
+                DPos startPos = canvas.mainWindowRenderer.GetOutputPos(x.fromComponent, x.fromComponentIndex);
+                DPos endPos = canvas.mainWindowRenderer.GetInputPos(x.toComponent, x.toComponentIndex);
+
+                double distance = Line2D.ptSegDist(
+                        startPos.x, startPos.y,
+                        endPos.x, endPos.y,
+                        canvas.mouseX, canvas.mouseY);
+
+                //System.out.println("X1: " + startPos.x + " Y1: " + startPos.y + " X2: " + endPos.x + " Y2: " + endPos.y + " MX: " + mPosX3 + " MY: " + mPosY3 + " DISTANCE: " + distance);
+
+                if (distance <= 3 * canvas.mainWindowRenderer.zoomLevel)
+                {
+                    x.toComponent.inputs.set(x.toComponentIndex, false);
+                    canvas.mainWindowRenderer.connections.remove(x);
+                    //System.out.println("DELETING CONNECTION!");
+                    return;
+                }
+            }
+        }
+
         dragComponent = false;
         if (selectedComponent != null)
         {
@@ -250,6 +283,7 @@ public class MainRenderController
 
 
         //System.out.println("COMPONENT: " + selectedComponent);
+
 
     }
 
