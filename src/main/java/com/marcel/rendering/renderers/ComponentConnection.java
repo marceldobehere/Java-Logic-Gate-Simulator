@@ -1,4 +1,4 @@
-package com.marcel.Rendering.renderers;
+package com.marcel.rendering.renderers;
 
 public class ComponentConnection {
 

@@ -1,8 +1,8 @@
-package com.marcel.Rendering.renderers;
+package com.marcel.rendering.renderers;
 
-import com.marcel.Rendering.CanvasThing;
-import com.marcel.Rendering.utils.DPos;
-import com.marcel.Rendering.utils.WindowRect;
+import com.marcel.rendering.CanvasThing;
+import com.marcel.rendering.utils.DPos;
+import com.marcel.rendering.utils.WindowRect;
 
 
 import java.awt.*;

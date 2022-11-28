@@ -1,6 +1,6 @@
-package com.marcel.Rendering.renderers;
+package com.marcel.rendering.renderers;
 
-import com.marcel.Rendering.utils.DPos;
+import com.marcel.rendering.utils.DPos;
 
 import java.awt.*;
 import java.util.ArrayList;

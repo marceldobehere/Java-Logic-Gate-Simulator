@@ -1,14 +1,10 @@
 package com.marcel;
 
-import com.marcel.Rendering.MainRenderController;
-import com.marcel.Rendering.utils.ThemeStuff;
+import com.marcel.rendering.MainRenderController;
+import com.marcel.rendering.utils.ThemeStuff;
 import com.marcel.service.ValidateStartupFileService;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.URISyntaxException;
 
 public class Main {
 
@@ -24,7 +20,7 @@ public class Main {
         //System.out.println("TEST: " + FileStuff.ReadFile("test.txt"));
 
         log.debug("Done with init!");
-        String baseTitleText = "Logic Gate Simulator v0.12";
+        String baseTitleText = "Logic Gate Simulator v0.14";
 
         double FPS;
         int counter = 100;

@@ -1,4 +1,4 @@
-package com.marcel.Rendering.utils;
+package com.marcel.rendering.utils;
 
 import java.awt.*;
 

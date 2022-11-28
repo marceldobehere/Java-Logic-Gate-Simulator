@@ -1,8 +1,8 @@
-package com.marcel.Rendering;
+package com.marcel.rendering;
 
-import com.marcel.Rendering.renderers.MainWindowRenderer;
-import com.marcel.Rendering.renderers.SidebarRenderer;
-import com.marcel.Rendering.renderers.TopMenuRenderer;
+import com.marcel.rendering.renderers.MainWindowRenderer;
+import com.marcel.rendering.renderers.SidebarRenderer;
+import com.marcel.rendering.renderers.TopMenuRenderer;
 
 import javax.swing.*;
 import java.awt.*;

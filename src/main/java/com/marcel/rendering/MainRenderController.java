@@ -1,11 +1,11 @@
-package com.marcel.Rendering;
+package com.marcel.rendering;
 
 import com.marcel.ParsingAndStuff.LoadLogic;
 import com.marcel.ParsingAndStuff.SaveLogic;
-import com.marcel.Rendering.renderers.ComponentConnection;
-import com.marcel.Rendering.renderers.LogicComponent;
-import com.marcel.Rendering.renderers.TopMenuRenderer;
-import com.marcel.Rendering.utils.DPos;
+import com.marcel.rendering.renderers.ComponentConnection;
+import com.marcel.rendering.renderers.LogicComponent;
+import com.marcel.rendering.renderers.TopMenuRenderer;
+import com.marcel.rendering.utils.DPos;
 
 import javax.swing.*;
 import java.awt.*;

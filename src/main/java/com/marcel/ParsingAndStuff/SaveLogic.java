@@ -1,8 +1,8 @@
 package com.marcel.ParsingAndStuff;
 
-import com.marcel.Rendering.renderers.ComponentConnection;
-import com.marcel.Rendering.renderers.LogicComponent;
-import com.marcel.Rendering.utils.FileStuff;
+import com.marcel.rendering.renderers.ComponentConnection;
+import com.marcel.rendering.renderers.LogicComponent;
+import com.marcel.rendering.utils.FileStuff;
 
 import java.util.ArrayList;
 import java.util.List;

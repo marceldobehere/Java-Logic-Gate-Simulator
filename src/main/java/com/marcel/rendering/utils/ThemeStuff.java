@@ -1,6 +1,6 @@
-package com.marcel.Rendering.utils;
+package com.marcel.rendering.utils;
 
-import com.marcel.Rendering.renderers.LogicComponent;
+import com.marcel.rendering.renderers.LogicComponent;
 
 import javax.swing.*;
 import java.util.ArrayList;

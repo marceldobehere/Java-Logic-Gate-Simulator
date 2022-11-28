@@ -1,4 +1,4 @@
-package com.marcel.Rendering.utils;
+package com.marcel.rendering.utils;
 
 import org.apache.commons.io.FileUtils;
 

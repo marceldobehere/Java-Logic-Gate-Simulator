@@ -1,4 +1,4 @@
-package com.marcel.Rendering.utils;
+package com.marcel.rendering.utils;
 
 public class WindowRect {
     public int x1, y1, x2, y2;
