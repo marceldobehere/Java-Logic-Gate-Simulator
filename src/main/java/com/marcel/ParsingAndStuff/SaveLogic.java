@@ -131,6 +131,6 @@ public class SaveLogic {
         System.out.println("Data:");
         System.out.println(resData);
 
-        FileStuff.WriteFile("test.txt", resData);
+        FileStuff.WriteFile(filename, resData);
     }
 }

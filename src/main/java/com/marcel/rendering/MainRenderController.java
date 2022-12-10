@@ -9,6 +9,8 @@ import com.marcel.rendering.utils.DPos;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
@@ -247,6 +249,7 @@ public class MainRenderController
                 pos.y >= startPos.y && pos.y <= endPos.y;
     }
 
+    public static String lastFile = "";
 
     public static void HandleMousePreClick(MouseEvent e)
     {
@@ -254,12 +257,46 @@ public class MainRenderController
         {
             if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.SAVE)
             {
-                SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, canvas.mainWindowRenderer.connections, "test.txt");
-                System.out.println("SAVING....");
+                FileDialog fd = new FileDialog(jFrame, "Bruh");
+
+                fd.setMode(FileDialog.SAVE);
+                String filename = "nullnull";
+                if (e.isControlDown())
+                    filename = lastFile;
+                if (filename.equals("") || filename.equals("nullnull"))
+                {
+                    fd.setVisible(true);
+                    filename = fd.getDirectory() + fd.getFile();
+                    System.out.println("PATH: " + filename);
+                }
+
+                if (filename.equals("") || filename.equals("nullnull"))
+                    return;
+
+                lastFile = filename;
+                SaveLogic.SaveLogicComponentsToFile(canvas.mainWindowRenderer.logicGates, canvas.mainWindowRenderer.connections, filename);
+                System.out.println("SAVING...");
             }
             else if (canvas.topMenuRenderer.selectedText == TopMenuRenderer.SelectedTextEnum.LOAD)
             {
-                LoadLogic.LoadSave("test.txt");
+                FileDialog fd = new FileDialog(jFrame, "Bruh");
+
+                fd.setMode(FileDialog.LOAD);
+                String filename = "";
+                if (e.isControlDown())
+                    filename = lastFile;
+                if (filename.equals("") || !new File(filename).exists())
+                {
+                    fd.setVisible(true);
+                    filename = fd.getDirectory() + fd.getFile();
+                    System.out.println("PATH: " + filename);
+                }
+
+                if (filename.equals("") || !new File(filename).exists())
+                   return;
+
+                lastFile = filename;
+                LoadLogic.LoadSave(filename);
                 System.out.println("LOADING....");
             }
 
@@ -286,7 +323,7 @@ public class MainRenderController
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
-                        System.out.println("Dragging full Selection...");
+                      //  System.out.println("Dragging full Selection...");
                         dragComponentList = true;
                         dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
                         dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
@@ -400,7 +437,7 @@ public class MainRenderController
                     {
                         if (e.getButton() == MouseEvent.BUTTON1)
                         {
-                            System.out.println("Dragging full Selection...");
+                          //  System.out.println("Dragging full Selection...");
                             dragComponentList = true;
                             dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
                             dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
@@ -419,7 +456,7 @@ public class MainRenderController
                         dragComponentList = true;
                         finishedComponentListBoundary = false;
                         dragComponentListOrigin = mPos;
-                        System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
+                      //  System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
                     }
                }
                else
@@ -427,7 +464,7 @@ public class MainRenderController
                    dragComponentList = true;
                    finishedComponentListBoundary = false;
                    dragComponentListOrigin = mPos;
-                   System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
+                //   System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
                }
            }
         }
@@ -523,7 +560,7 @@ public class MainRenderController
                             endPos.y = temp;
                         }
 
-                        System.out.println("RECT: " + startPos.x + " " + startPos.y + " " + endPos.x + " " + endPos.y);
+                       // System.out.println("RECT: " + startPos.x + " " + startPos.y + " " + endPos.x + " " + endPos.y);
 
 
                         for (int i = 0; i < canvas.mainWindowRenderer.logicGates.size(); i++)
@@ -532,7 +569,7 @@ public class MainRenderController
 
                             DPos cSize = canvas.mainWindowRenderer.GetComponentSize(c, false);
 
-                            System.out.println("COMP BOUNDS: " + c.pos.x + " " + c.pos.y + " " + (c.pos.x + cSize.x) + " " + (c.pos.y + cSize.y));
+                          //  System.out.println("COMP BOUNDS: " + c.pos.x + " " + c.pos.y + " " + (c.pos.x + cSize.x) + " " + (c.pos.y + cSize.y));
 
                             if (startPos.x <= c.pos.x && startPos.y <= c.pos.y &&
                             c.pos.x + cSize.x <= endPos.x && c.pos.y + cSize.y <= endPos.y)
