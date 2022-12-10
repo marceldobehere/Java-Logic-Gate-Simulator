@@ -8,6 +8,7 @@ import com.marcel.rendering.renderers.TopMenuRenderer;
 import com.marcel.rendering.utils.DPos;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +23,15 @@ public class MainRenderController
 
     private static void HandleKeyEvent(KeyEvent e)
     {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        {
+            finishedComponentListBoundary = false;
+            dragComponent = false;
+            dragCable = false;
+            dragComponentList = false;
+            return;
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_UP)
         {
             canvas.sidebarRenderer.shrinkSidebar = !canvas.sidebarRenderer.shrinkSidebar;
@@ -168,27 +178,35 @@ public class MainRenderController
 
     public static void updateSelectedComponentPosition()
     {
-        if (selectedComponent == null)
+        if (dragComponentList)
         {
-            if (dragComponentList)
+            DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
+            if (!finishedComponentListBoundary)
             {
-                DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
-                if (!finishedComponentListBoundary)
-                {
-                    dragComponentListEnd = mPos;
-                    return;
-                }
-                else
-                {
-                    dragComponentListOrigin.x = mPos.x + dragComponentListOriginOffset.x;
-                    dragComponentListOrigin.y = mPos.y + dragComponentListOriginOffset.y;
+                dragComponentListEnd = mPos;
+                return;
+            }
+            else
+            {
+                dragComponentListOrigin.x = mPos.x + dragComponentListOriginOffset.x;
+                dragComponentListOrigin.y = mPos.y + dragComponentListOriginOffset.y;
 
-                    dragComponentListEnd.x = mPos.x + dragComponentListEndOffset.x;
-                    dragComponentListEnd.y = mPos.y + dragComponentListEndOffset.y;
+                dragComponentListEnd.x = mPos.x + dragComponentListEndOffset.x;
+                dragComponentListEnd.y = mPos.y + dragComponentListEndOffset.y;
+
+                for (int i = 0; i < selectedComponents.size(); i++)
+                {
+                    LogicComponent c = selectedComponents.get(i);
+                    DPos o = selectedComponentOffsets.get(i);
+                    c.pos.x = mPos.x + o.x;
+                    c.pos.y = mPos.y + o.y;
                 }
             }
+            return;
+        }
 
-
+        if (selectedComponent == null)
+        {
             return;
         }
         if (!dragComponent)
@@ -208,6 +226,27 @@ public class MainRenderController
         selectedComponent.pos.y = selectedComponentOffset.y + mPos.y;
 
     }
+
+    public static boolean PositionIsInRect(DPos pos, DPos start, DPos end)
+    {
+        DPos startPos = new DPos(start.x, start.y);
+        DPos endPos = new DPos(end.x, end.y);
+        if (startPos.x > endPos.x)
+        {
+            double temp = startPos.x;
+            startPos.x = endPos.x;
+            endPos.x = temp;
+        }
+        if (startPos.y > endPos.y)
+        {
+            double temp = startPos.y;
+            startPos.y = endPos.y;
+            endPos.y = temp;
+        }
+        return pos.x >= startPos.x && pos.x <= endPos.x &&
+                pos.y >= startPos.y && pos.y <= endPos.y;
+    }
+
 
     public static void HandleMousePreClick(MouseEvent e)
     {
@@ -236,6 +275,32 @@ public class MainRenderController
         int nMouseY = (int) b.getY() - canvas.getLocationOnScreen().y;
 
         DPos mPos = ConvertWindowPosToLogicPos(nMouseX, nMouseY);
+
+
+        if (!dragComponentList)
+        {
+            //DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
+            if (finishedComponentListBoundary)
+            {
+                if (PositionIsInRect(mPos, dragComponentListOrigin, dragComponentListEnd))
+                {
+                    if (e.getButton() == MouseEvent.BUTTON1)
+                    {
+                        System.out.println("Dragging full Selection...");
+                        dragComponentList = true;
+                        dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
+                        dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
+
+                        for (int i = 0; i < selectedComponentOffsets.size(); i++)
+                        {
+                            selectedComponentOffsets.get(i).x = selectedComponents.get(i).pos.x - mPos.x;
+                            selectedComponentOffsets.get(i).y = selectedComponents.get(i).pos.y - mPos.y;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
 
 
         selectedComponent = canvas.mainWindowRenderer.GetComponentAt(nMouseX, nMouseY);
@@ -326,24 +391,41 @@ public class MainRenderController
         }
         else
         {
-           if (!dragComponentList && e.getButton() == MouseEvent.BUTTON1)
+           if (!dragComponentList)
            {
                //DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
                if (finishedComponentListBoundary)
                {
-                    if (mPos.x >= dragComponentListOrigin.x && mPos.x <= dragComponentListEnd.x &&
-                            mPos.y >= dragComponentListOrigin.y && mPos.y <= dragComponentListEnd.y)
+                    if (PositionIsInRect(mPos, dragComponentListOrigin, dragComponentListEnd))
                     {
-                        System.out.println("Dragging Selection...");
+                        if (e.getButton() == MouseEvent.BUTTON1)
+                        {
+                            System.out.println("Dragging full Selection...");
+                            dragComponentList = true;
+                            dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
+                            dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
+
+                            for (int i = 0; i < selectedComponentOffsets.size(); i++)
+                            {
+                                selectedComponentOffsets.get(i).x = selectedComponents.get(i).pos.x - mPos.x;
+                                selectedComponentOffsets.get(i).y = selectedComponents.get(i).pos.y - mPos.y;
+                            }
+
+                            return;
+                        }
+                    }
+                    else
+                    {
                         dragComponentList = true;
-                        dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
-                        dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
-                        return;
+                        finishedComponentListBoundary = false;
+                        dragComponentListOrigin = mPos;
+                        System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
                     }
                }
                else
                {
                    dragComponentList = true;
+                   finishedComponentListBoundary = false;
                    dragComponentListOrigin = mPos;
                    System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
                }
@@ -418,20 +500,60 @@ public class MainRenderController
                 {
                     if (!finishedComponentListBoundary)
                     {
-                        boolean gotComponents = false;
+                        //System.out.println("ADD COMPONENTS TO THE LIST WITH THE OFFSETS HERE!");
 
-                        gotComponents = true;
+                        List<LogicComponent> selComps = new ArrayList<>();
+                        List<DPos> selCompOffsets = new ArrayList<>();
 
-                        System.out.println("ADD COMPONENTS TO THE LIST WITH THE OFFSETS HERE!");
+                        DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
 
+                        DPos startPos = new DPos(MainRenderController.dragComponentListOrigin.x, MainRenderController.dragComponentListOrigin.y);
+                        DPos endPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
 
-
-                        if (gotComponents)
+                        if (startPos.x > endPos.x)
                         {
+                            double temp = startPos.x;
+                            startPos.x = endPos.x;
+                            endPos.x = temp;
+                        }
+                        if (startPos.y > endPos.y)
+                        {
+                            double temp = startPos.y;
+                            startPos.y = endPos.y;
+                            endPos.y = temp;
+                        }
+
+                        System.out.println("RECT: " + startPos.x + " " + startPos.y + " " + endPos.x + " " + endPos.y);
+
+
+                        for (int i = 0; i < canvas.mainWindowRenderer.logicGates.size(); i++)
+                        {
+                            LogicComponent c = canvas.mainWindowRenderer.logicGates.get(i);
+
+                            DPos cSize = canvas.mainWindowRenderer.GetComponentSize(c, false);
+
+                            System.out.println("COMP BOUNDS: " + c.pos.x + " " + c.pos.y + " " + (c.pos.x + cSize.x) + " " + (c.pos.y + cSize.y));
+
+                            if (startPos.x <= c.pos.x && startPos.y <= c.pos.y &&
+                            c.pos.x + cSize.x <= endPos.x && c.pos.y + cSize.y <= endPos.y)
+                            {
+                                selComps.add(c);
+                                selCompOffsets.add(new DPos(c.pos.x - mPos.x, c.pos.y - mPos.y));
+                            }
+                        }
+
+
+
+                        if (selComps.size() > 0)
+                        {
+                            selectedComponents = selComps;
+                            selectedComponentOffsets = selCompOffsets;
                             finishedComponentListBoundary = true;
                         }
                         else
                         {
+                            selectedComponents = new ArrayList<>();
+                            selectedComponentOffsets = new ArrayList<>();
                             finishedComponentListBoundary = false;
                         }
                     }

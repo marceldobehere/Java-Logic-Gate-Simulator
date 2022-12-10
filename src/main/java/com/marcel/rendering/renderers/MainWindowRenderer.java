@@ -180,6 +180,24 @@ public class MainWindowRenderer {
         return null;
     }
 
+    public DPos GetComponentSize(LogicComponent gate, boolean useZoom)
+    {
+        if (gate == null)
+            return null;
+        DPos size = new DPos(0, 0);
+
+        Image img = GetImageFromType(gate.type);
+
+        double zoom = 1;
+        if (useZoom)
+            zoom = zoomLevel;
+
+        size.x = img.getWidth(null) * zoom;
+        size.y = img.getHeight(null) * zoom;
+
+        return size;
+    }
+
     public void deleteComponent(LogicComponent gate)
     {
         //System.out.println("deleting component...");
