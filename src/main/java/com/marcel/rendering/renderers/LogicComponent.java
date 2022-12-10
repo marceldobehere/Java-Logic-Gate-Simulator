@@ -18,6 +18,12 @@ public class LogicComponent
         LED,
         BUTTON,
 
+        NAND,
+        XOR,
+        NOR,
+        XNOR,
+        BUFFER,
+
 
         CUSTOM
     }
@@ -30,6 +36,17 @@ public class LogicComponent
             return ComponentType.OR;
         if (data.equals("NOT"))
             return ComponentType.NOT;
+        if (data.equals("BUFFER"))
+            return ComponentType.BUFFER;
+
+        if (data.equals("NAND"))
+            return ComponentType.NAND;
+        if (data.equals("XOR"))
+            return ComponentType.XOR;
+        if (data.equals("NOR"))
+            return ComponentType.NOR;
+        if (data.equals("XNOR"))
+            return ComponentType.XNOR;
 
         if (data.equals("SWITCH"))
             return ComponentType.SWITCH;
@@ -50,6 +67,11 @@ public class LogicComponent
     public static Image SwitchImage = null;
     public static Image ButtonImage = null;
     public static Image LedImage = null;
+    public static Image NandImage = null;
+    public static Image NorImage = null;
+    public static Image XorImage = null;
+    public static Image XnorImage = null;
+    public static Image BufferImage = null;
 
     public DPos pos;
 
@@ -81,14 +103,16 @@ this.cont = cont;
         height = AndImage.getHeight(null);
         isBasic = false;
         basicState = false;
-        if (type == ComponentType.AND || type == ComponentType.OR)
+        if (type == ComponentType.AND || type == ComponentType.OR ||
+                type == ComponentType.NAND || type == ComponentType.NOR ||
+                type == ComponentType.XOR || type == ComponentType.XNOR)
         {
             inputCount = 2;
             outputCount = 1;
             isBasic = true;
             drawThing = true;
         }
-        else if (type == ComponentType.NOT)
+        else if (type == ComponentType.NOT || type == ComponentType.BUFFER)
         {
             inputCount = 1;
             outputCount = 1;
@@ -151,6 +175,16 @@ this.cont = cont;
             basicState = inputs.get(0) || inputs.get(1);
         else if (type == ComponentType.NOT)
             basicState = !inputs.get(0);
+        else if (type == ComponentType.BUFFER)
+            basicState = inputs.get(0);
+        else if (type == ComponentType.XOR)
+            basicState = inputs.get(0) ^ inputs.get(1);
+        else if (type == ComponentType.NOR)
+            basicState = !(inputs.get(0) || inputs.get(1));
+        else if (type == ComponentType.XNOR)
+            basicState = !(inputs.get(0) ^ inputs.get(1));
+        else if (type == ComponentType.NAND)
+            basicState = !(inputs.get(0) && inputs.get(1));
         else if (type == ComponentType.LED)
             basicState = inputs.get(0);
         else if (type == ComponentType.SWITCH)

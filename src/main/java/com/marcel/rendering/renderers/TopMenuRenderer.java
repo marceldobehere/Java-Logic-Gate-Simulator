@@ -21,7 +21,7 @@ public class TopMenuRenderer
         NONE,
         SAVE,
         LOAD,
-        DEATH
+        ETC
     }
     public List<String> menuText = new ArrayList<>();
     public List<SelectedTextEnum> menuTextEnum = new ArrayList<>();
@@ -36,8 +36,8 @@ public class TopMenuRenderer
         menuTextEnum.add(SelectedTextEnum.SAVE);
         menuText.add("LOAD");
         menuTextEnum.add(SelectedTextEnum.LOAD);
-        menuText.add("DEATH");
-        menuTextEnum.add(SelectedTextEnum.DEATH);
+        menuText.add("ETC");
+        menuTextEnum.add(SelectedTextEnum.ETC);
     }
 
     public void draw(Graphics2D g2)

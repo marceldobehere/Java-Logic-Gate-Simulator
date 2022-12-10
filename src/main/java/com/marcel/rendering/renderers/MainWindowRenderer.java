@@ -1,6 +1,8 @@
 package com.marcel.rendering.renderers;
 
+import com.marcel.Main;
 import com.marcel.rendering.CanvasThing;
+import com.marcel.rendering.MainRenderController;
 import com.marcel.rendering.utils.DPos;
 import com.marcel.rendering.utils.WindowRect;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class MainWindowRenderer {
     public WindowRect mainRect = new WindowRect();
     public Color mainWindowCol = new Color(206,206,206);
+    public Color mainWindowSelectCol = new Color(10,40,200, 80);
     public float zoomLevel = 1;
     public float scrollX = 0;
     public float scrollY = 0;
@@ -37,6 +40,30 @@ public class MainWindowRenderer {
         CanvasThing.fillRectFromPoints(g2, mainRect.x1, mainRect.y1, mainRect.x2, mainRect.y2);
         drawGates(g2);
         drawWires(g2);
+
+        if (MainRenderController.finishedComponentListBoundary  || MainRenderController.dragComponentList)
+        {
+
+            DPos startPos = MainRenderController.ConvertLogicPosToWindowPos(MainRenderController.dragComponentListOrigin.x , MainRenderController.dragComponentListOrigin.y);
+            DPos endPos = MainRenderController.ConvertLogicPosToWindowPos(MainRenderController.dragComponentListEnd.x , MainRenderController.dragComponentListEnd.y);
+            //System.out.println("DRAWING RECT " + startPos.x + " " + startPos.y + " " + endPos.x + " " + endPos.y);
+
+            if (startPos.x > endPos.x)
+            {
+                double temp = startPos.x;
+                startPos.x = endPos.x;
+                endPos.x = temp;
+            }
+            if (startPos.y > endPos.y)
+            {
+                double temp = startPos.y;
+                startPos.y = endPos.y;
+                endPos.y = temp;
+            }
+
+            g2.setColor(mainWindowSelectCol);
+            g2.fillRect((int) startPos.x, (int) startPos.y, (int) (endPos.x - startPos.x), (int) (endPos.y - startPos.y));
+        }
     }
 
     public void drawWires(Graphics2D g2)
@@ -87,6 +114,16 @@ public class MainWindowRenderer {
             return LogicComponent.OrImage;
         else if (type == LogicComponent.ComponentType.NOT)
             return LogicComponent.NotImage;
+        else if (type == LogicComponent.ComponentType.NAND)
+            return LogicComponent.NandImage;
+        else if (type == LogicComponent.ComponentType.NOR)
+            return LogicComponent.NorImage;
+        else if (type == LogicComponent.ComponentType.BUFFER)
+            return LogicComponent.BufferImage;
+        else if (type == LogicComponent.ComponentType.XOR)
+            return LogicComponent.XorImage;
+        else if (type == LogicComponent.ComponentType.XNOR)
+            return LogicComponent.XnorImage;
         else if (type == LogicComponent.ComponentType.LED)
             return LogicComponent.LedImage;
         else if (type == LogicComponent.ComponentType.SWITCH)
@@ -101,6 +138,14 @@ public class MainWindowRenderer {
         return (type == LogicComponent.ComponentType.AND ||
                 type == LogicComponent.ComponentType.OR ||
                 type == LogicComponent.ComponentType.NOT ||
+
+                type == LogicComponent.ComponentType.NAND ||
+                type == LogicComponent.ComponentType.NOR ||
+                type == LogicComponent.ComponentType.BUFFER ||
+
+                type == LogicComponent.ComponentType.XOR ||
+                type == LogicComponent.ComponentType.XNOR ||
+
                 type == LogicComponent.ComponentType.LED ||
                 type == LogicComponent.ComponentType.SWITCH ||
                 type == LogicComponent.ComponentType.BUTTON);
@@ -137,7 +182,7 @@ public class MainWindowRenderer {
 
     public void deleteComponent(LogicComponent gate)
     {
-        System.out.println("deleting component...");
+        //System.out.println("deleting component...");
 
         for (int i = 0; i < connections.size(); i++)
         {

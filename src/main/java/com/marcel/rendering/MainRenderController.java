@@ -8,9 +8,11 @@ import com.marcel.rendering.renderers.TopMenuRenderer;
 import com.marcel.rendering.utils.DPos;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 public class MainRenderController
 {
@@ -27,32 +29,39 @@ public class MainRenderController
         else if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_3 ||
                  e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_5 || e.getKeyCode() == KeyEvent.VK_6)
         {
-            float newZoom = canvas.mainWindowRenderer.zoomLevel;
-
-            float scrollX = canvas.mainWindowRenderer.scrollX;
-            float scrollY = canvas.mainWindowRenderer.scrollY;
-
-            float mPosX0 = canvas.mouseX - canvas.mainWindowRenderer.mainRect.x1;
-            float mPosY0 = canvas.mouseY - canvas.mainWindowRenderer.mainRect.y1;
-
-            float mPosX3 = (mPosX0 / newZoom) + scrollX;
-            float mPosY3 = (mPosY0 / newZoom) + scrollY;
+            DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
 
             LogicComponent.ComponentType type = LogicComponent.ComponentType.AND;
-            if (e.getKeyCode() == KeyEvent.VK_1)
-                type = LogicComponent.ComponentType.AND;
-            if (e.getKeyCode() == KeyEvent.VK_2)
-                type = LogicComponent.ComponentType.OR;
-            if (e.getKeyCode() == KeyEvent.VK_3)
-                type = LogicComponent.ComponentType.NOT;
-            if (e.getKeyCode() == KeyEvent.VK_4)
-                type = LogicComponent.ComponentType.SWITCH;
-            if (e.getKeyCode() == KeyEvent.VK_5)
-                type = LogicComponent.ComponentType.BUTTON;
+            if (e.isShiftDown())
+            {
+                if (e.getKeyCode() == KeyEvent.VK_1)
+                    type = LogicComponent.ComponentType.NAND;
+                if (e.getKeyCode() == KeyEvent.VK_2)
+                    type = LogicComponent.ComponentType.NOR;
+                if (e.getKeyCode() == KeyEvent.VK_3)
+                    type = LogicComponent.ComponentType.BUFFER;
+                if (e.getKeyCode() == KeyEvent.VK_4)
+                    type = LogicComponent.ComponentType.XNOR;
+                if (e.getKeyCode() == KeyEvent.VK_5)
+                    type = LogicComponent.ComponentType.BUTTON;
+            }
+            else
+            {
+                if (e.getKeyCode() == KeyEvent.VK_1)
+                    type = LogicComponent.ComponentType.AND;
+                if (e.getKeyCode() == KeyEvent.VK_2)
+                    type = LogicComponent.ComponentType.OR;
+                if (e.getKeyCode() == KeyEvent.VK_3)
+                    type = LogicComponent.ComponentType.NOT;
+                if (e.getKeyCode() == KeyEvent.VK_4)
+                    type = LogicComponent.ComponentType.XOR;
+                if (e.getKeyCode() == KeyEvent.VK_5)
+                    type = LogicComponent.ComponentType.SWITCH;
+            }
             if (e.getKeyCode() == KeyEvent.VK_6)
                 type = LogicComponent.ComponentType.LED;
 
-            canvas.mainWindowRenderer.logicGates.add(new LogicComponent(type, new DPos(mPosX3, mPosY3), canvas.mainWindowRenderer));
+            canvas.mainWindowRenderer.logicGates.add(new LogicComponent(type, mPos, canvas.mainWindowRenderer));
 
         }
     }
@@ -100,6 +109,17 @@ public class MainRenderController
         }
     }
 
+
+    public static List<LogicComponent> selectedComponents = new ArrayList<LogicComponent>();
+    public static List<DPos> selectedComponentOffsets = new ArrayList<DPos>();
+    public static boolean dragComponentList = false;
+    public static boolean finishedComponentListBoundary = false;
+    public static DPos dragComponentListOrigin = new DPos(0, 0);
+    public static DPos dragComponentListEnd = new DPos(0, 0);
+    public static DPos dragComponentListOriginOffset = new DPos(0, 0);
+    public static DPos dragComponentListEndOffset = new DPos(0, 0);
+
+
     public static LogicComponent selectedComponent = null;
     public static DPos selectedComponentOffset = new DPos();
     public static boolean dragComponent = false;
@@ -112,6 +132,35 @@ public class MainRenderController
 
     }
 
+    public static DPos ConvertWindowPosToLogicPos(double x, double y)
+    {
+        float newZoom = canvas.mainWindowRenderer.zoomLevel;
+
+        float scrollX = canvas.mainWindowRenderer.scrollX;
+        float scrollY = canvas.mainWindowRenderer.scrollY;
+
+        double mPosX0 = x - canvas.mainWindowRenderer.mainRect.x1;
+        double mPosY0 = y - canvas.mainWindowRenderer.mainRect.y1;
+
+        double mPosX3 = (mPosX0 / newZoom) + scrollX;
+        double mPosY3 = (mPosY0 / newZoom) + scrollY;
+
+        return new DPos(mPosX3, mPosY3);
+    }
+
+    public static DPos ConvertLogicPosToWindowPos(double x, double y)
+    {
+        float newZoom = canvas.mainWindowRenderer.zoomLevel;
+
+        float scrollX = canvas.mainWindowRenderer.scrollX;
+        float scrollY = canvas.mainWindowRenderer.scrollY;
+
+        double mPosX3 = (x - scrollX) * newZoom + canvas.mainWindowRenderer.mainRect.x1;
+        double mPosY3 = (y - scrollY) * newZoom + canvas.mainWindowRenderer.mainRect.y1;
+
+        return new DPos(mPosX3, mPosY3);
+    }
+
     public static void HandleMouseDrag(MouseEvent e)
     {
 
@@ -119,13 +168,32 @@ public class MainRenderController
 
     public static void updateSelectedComponentPosition()
     {
+        if (selectedComponent == null)
+        {
+            if (dragComponentList)
+            {
+                DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
+                if (!finishedComponentListBoundary)
+                {
+                    dragComponentListEnd = mPos;
+                    return;
+                }
+                else
+                {
+                    dragComponentListOrigin.x = mPos.x + dragComponentListOriginOffset.x;
+                    dragComponentListOrigin.y = mPos.y + dragComponentListOriginOffset.y;
+
+                    dragComponentListEnd.x = mPos.x + dragComponentListEndOffset.x;
+                    dragComponentListEnd.y = mPos.y + dragComponentListEndOffset.y;
+                }
+            }
+
+
+            return;
+        }
         if (!dragComponent)
             return;
-        if (selectedComponent == null)
-            return;
 
-        int oMouseX = canvas.mouseX;
-        int oMouseY = canvas.mouseY;
         PointerInfo a = MouseInfo.getPointerInfo();
         Point b = a.getLocation();
         int nMouseX = (int) b.getX() - canvas.getLocationOnScreen().x;
@@ -133,21 +201,11 @@ public class MainRenderController
         canvas.mouseX = nMouseX;
         canvas.mouseY = nMouseY;
 
-        float newZoom = canvas.mainWindowRenderer.zoomLevel;
 
-        float scrollX = canvas.mainWindowRenderer.scrollX;
-        float scrollY = canvas.mainWindowRenderer.scrollY;
+        DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
 
-        float mPosX0 = nMouseX - canvas.mainWindowRenderer.mainRect.x1;
-        float mPosY0 = nMouseY - canvas.mainWindowRenderer.mainRect.y1;
-
-        float mPosX3 = (mPosX0 / newZoom) + scrollX;
-        float mPosY3 = (mPosY0 / newZoom) + scrollY;
-
-
-
-        selectedComponent.pos.x = selectedComponentOffset.x + mPosX3;
-        selectedComponent.pos.y = selectedComponentOffset.y + mPosY3;
+        selectedComponent.pos.x = selectedComponentOffset.x + mPos.x;
+        selectedComponent.pos.y = selectedComponentOffset.y + mPos.y;
 
     }
 
@@ -177,23 +235,14 @@ public class MainRenderController
         int nMouseX = (int) b.getX() - canvas.getLocationOnScreen().x;
         int nMouseY = (int) b.getY() - canvas.getLocationOnScreen().y;
 
-        float newZoom = canvas.mainWindowRenderer.zoomLevel;
-
-        float scrollX = canvas.mainWindowRenderer.scrollX;
-        float scrollY = canvas.mainWindowRenderer.scrollY;
-
-        float mPosX0 = nMouseX - canvas.mainWindowRenderer.mainRect.x1;
-        float mPosY0 = nMouseY - canvas.mainWindowRenderer.mainRect.y1;
-
-        float mPosX3 = (mPosX0 / newZoom) + scrollX;
-        float mPosY3 = (mPosY0 / newZoom) + scrollY;
+        DPos mPos = ConvertWindowPosToLogicPos(nMouseX, nMouseY);
 
 
         selectedComponent = canvas.mainWindowRenderer.GetComponentAt(nMouseX, nMouseY);
         if (selectedComponent != null)
         {
-            selectedComponentOffset.x = selectedComponent.pos.x - mPosX3;
-            selectedComponentOffset.y = selectedComponent.pos.y - mPosY3;
+            selectedComponentOffset.x = selectedComponent.pos.x - mPos.x;
+            selectedComponentOffset.y = selectedComponent.pos.y - mPos.y;
 
             canvas.mainWindowRenderer.logicGates.remove(selectedComponent);
             canvas.mainWindowRenderer.logicGates.add(selectedComponent);
@@ -269,17 +318,38 @@ public class MainRenderController
                 dragCableFromOutputIndex = sIndex;
                 DPos startingFrom = canvas.mainWindowRenderer.GetOutputPos(selectedComponent, sIndex);
 
-                double cPosX0 = startingFrom.x - canvas.mainWindowRenderer.mainRect.x1;
-                double cPosY0 = startingFrom.y - canvas.mainWindowRenderer.mainRect.y1;
-
-                double cPosX3 = (cPosX0 / newZoom) + scrollX;
-                double cPosY3 = (cPosY0 / newZoom) + scrollY;
-
-                cableFrom.x = cPosX3;//mPosX3;
-                cableFrom.y = cPosY3;//mPosY3;
+                cableFrom = ConvertWindowPosToLogicPos(startingFrom.x, startingFrom.y);
                 //System.out.println("Drag cable moment!");
+                return;
             }
+            return;
         }
+        else
+        {
+           if (!dragComponentList && e.getButton() == MouseEvent.BUTTON1)
+           {
+               //DPos mPos = ConvertWindowPosToLogicPos(canvas.mouseX, canvas.mouseY);
+               if (finishedComponentListBoundary)
+               {
+                    if (mPos.x >= dragComponentListOrigin.x && mPos.x <= dragComponentListEnd.x &&
+                            mPos.y >= dragComponentListOrigin.y && mPos.y <= dragComponentListEnd.y)
+                    {
+                        System.out.println("Dragging Selection...");
+                        dragComponentList = true;
+                        dragComponentListOriginOffset = new DPos(dragComponentListOrigin.x - mPos.x, dragComponentListOrigin.y - mPos.y);
+                        dragComponentListEndOffset = new DPos(dragComponentListEnd.x - mPos.x, dragComponentListEnd.y - mPos.y);
+                        return;
+                    }
+               }
+               else
+               {
+                   dragComponentList = true;
+                   dragComponentListOrigin = mPos;
+                   System.out.println("DRAG LIST ORIGIN: " + dragComponentListOrigin.x + " " + dragComponentListOrigin.y);
+               }
+           }
+        }
+
 
 
         //System.out.println("COMPONENT: " + selectedComponent);
@@ -343,6 +413,37 @@ public class MainRenderController
 
             @Override
             public void mouseReleased(MouseEvent e) {
+
+                if (dragComponentList)
+                {
+                    if (!finishedComponentListBoundary)
+                    {
+                        boolean gotComponents = false;
+
+                        gotComponents = true;
+
+                        System.out.println("ADD COMPONENTS TO THE LIST WITH THE OFFSETS HERE!");
+
+
+
+                        if (gotComponents)
+                        {
+                            finishedComponentListBoundary = true;
+                        }
+                        else
+                        {
+                            finishedComponentListBoundary = false;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                    dragComponentList = false;
+                    return;
+                }
+
+
                 LogicComponent last = canvas.mainWindowRenderer.GetComponentAt(canvas.mouseX, canvas.mouseY);
                 if (last != null)
                 {

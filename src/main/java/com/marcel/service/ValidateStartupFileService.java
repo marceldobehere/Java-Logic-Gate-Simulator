@@ -19,10 +19,12 @@ public final class ValidateStartupFileService {
 
 
     public static void validateLocalResources() {
-        if (configFolder.exists())
-            return;
+        //if (configFolder.exists())
+        //    return;
 
-        log.debug("Config Folder does not exist.");
+        //log.debug("Config Folder does not exist.");
+        log.debug("Config Folder does not exist. (TODO: Fix this)");
+
         configFolder.mkdir();
         try {
             final File resourceFile = getLocalResources();
