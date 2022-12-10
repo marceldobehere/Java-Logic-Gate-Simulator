@@ -27,42 +27,42 @@ public class SaveLogic {
     {
         if (comp.isBasic)
         {
-            String str = "";
-            str += GetIndexOfLogicComponent(allComponents, comp) + ", ";
-            str += "BASIC" + ", ";
-            str += comp.type + ", ";
-            str += comp.basicState + ", ";
+            StringBuilder str = new StringBuilder();
+            str.append(GetIndexOfLogicComponent(allComponents, comp)).append(", ");
+            str.append("BASIC" + ", ");
+            str.append(comp.type).append(", ");
+            str.append(comp.basicState).append(", ");
             {
-                str += "{";
-                str += comp.pos.x + ", ";
-                str += comp.pos.y;
-                str += "}, ";
+                str.append("{");
+                str.append(comp.pos.x).append(", ");
+                str.append(comp.pos.y);
+                str.append("}, ");
             }
             {
-                str += "[";
+                str.append("[");
                 if (comp.inputs.size() > 0)
                 {
                     for (int i = 0; i < comp.inputs.size() - 1; i++)
                     {
-                        str += comp.inputs.get(i);
-                        str += ", ";
+                        str.append(comp.inputs.get(i));
+                        str.append(", ");
                     }
-                    str += comp.inputs.get(comp.inputs.size() - 1);
+                    str.append(comp.inputs.get(comp.inputs.size() - 1));
                 }
-                str += "], ";
+                str.append("], ");
             }
             {
-                str += "[";
+                str.append("[");
                 if (comp.outputs.size() > 0)
                 {
                     for (int i = 0; i < comp.outputs.size() - 1; i++)
                     {
-                        str += comp.outputs.get(i);
-                        str += ", ";
+                        str.append(comp.outputs.get(i));
+                        str.append(", ");
                     }
-                    str += comp.outputs.get(comp.outputs.size() - 1);
+                    str.append(comp.outputs.get(comp.outputs.size() - 1));
                 }
-                str += "]";
+                str.append("]");
             }
 
 
@@ -123,14 +123,14 @@ public class SaveLogic {
         }
         tempData.add("]");
 
-        String resData = "[";
+        StringBuilder resData = new StringBuilder("[");
         for (String str : tempData)
-            resData += str;
-        resData += "]";
+            resData.append(str);
+        resData.append("]");
 
         System.out.println("Data:");
         System.out.println(resData);
 
-        FileStuff.WriteFile(filename, resData);
+        FileStuff.WriteFile(filename, resData.toString());
     }
 }

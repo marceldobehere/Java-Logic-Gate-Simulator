@@ -12,7 +12,7 @@ public class FileStuff
 {
     public static String InternalFolderPath = FileUtils.getUserDirectoryPath() +
             "/.Logic Gate Simulator/internal/";
-    public static String ConfigFilePath = InternalFolderPath + "config.cfg";
+    //public static String ConfigFilePath = InternalFolderPath + "config.cfg";
     public static String LogicGateImageFolderPath = null;
 
     public static String ReadFile(String pathString)
@@ -21,8 +21,7 @@ public class FileStuff
         try
         {
             byte[] data = Files.readAllBytes(path);
-            String str = new String(data, StandardCharsets.UTF_8);
-            return str;
+            return new String(data, StandardCharsets.UTF_8);
         }
         catch (IOException exception)
         {
@@ -36,7 +35,7 @@ public class FileStuff
         Path path = Paths.get(pathString);
         try
         {
-            Files.write(path, data.getBytes(StandardCharsets.UTF_8));
+            Files.writeString(path, data);
         }
         catch (IOException exception)
         {

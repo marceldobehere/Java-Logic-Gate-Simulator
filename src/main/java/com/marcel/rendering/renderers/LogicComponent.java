@@ -55,8 +55,6 @@ public class LogicComponent
         if (data.equals("BUTTON"))
             return ComponentType.BUTTON;
 
-        if (data.equals("CUSTOM"))
-            return ComponentType.CUSTOM;
 
         return ComponentType.CUSTOM;
     }
@@ -167,6 +165,7 @@ this.cont = cont;
             outputs.add(false);
     }
 
+    @SuppressWarnings("all")
     public void CalcState()
     {
         if (type == ComponentType.AND)
@@ -182,7 +181,7 @@ this.cont = cont;
         else if (type == ComponentType.NOR)
             basicState = !(inputs.get(0) || inputs.get(1));
         else if (type == ComponentType.XNOR)
-            basicState = !(inputs.get(0) ^ inputs.get(1));
+            basicState = inputs.get(0) == inputs.get(1);
         else if (type == ComponentType.NAND)
             basicState = !(inputs.get(0) && inputs.get(1));
         else if (type == ComponentType.LED)
@@ -202,10 +201,6 @@ this.cont = cont;
         {
             outputs.set(0, basicState);
         }
-        else
-        {
-
-        }
 
         for (int i = 0; i < outputCount; i++)
             UpdateOutput(i, outputs.get(i));
@@ -222,6 +217,7 @@ this.cont = cont;
         }
     }
 
+    @SuppressWarnings("unused")
     public void UpdateInput(ComponentConnection conn, boolean state)
     {
         inputs.set(conn.toComponentIndex, state);

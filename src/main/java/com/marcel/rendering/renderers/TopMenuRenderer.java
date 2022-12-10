@@ -14,7 +14,7 @@ public class TopMenuRenderer
     public int topMenuHeight;
     public Color topMenuCol = new Color(131,157,175),
             topMenuTextCol= new Color(20,20,40),
-            topMenuHighlightedTextCol= new Color(220,220,240);;
+            topMenuHighlightedTextCol= new Color(220,220,240);
     public Font topMenuFont = new Font(Font.SANS_SERIF, Font.PLAIN, 30);
     public enum SelectedTextEnum
     {
@@ -56,7 +56,7 @@ public class TopMenuRenderer
         for (int i = 0; i < menuText.size(); i++)
         {
             String text = menuText.get(i);
-            var bounds = metrics.getStringBounds(text, (Graphics) g2);
+            var bounds = metrics.getStringBounds(text, g2);
             if (mouseX >= xPos && mouseX <= xPos + bounds.getWidth() &&
                     mouseY >= 0 && mouseY <= topMenuHeight)
             {

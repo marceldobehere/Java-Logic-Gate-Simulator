@@ -8,6 +8,7 @@ import com.marcel.rendering.utils.FileStuff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LoadLogic
 {
@@ -17,7 +18,7 @@ public class LoadLogic
             return null;
 
         if (componentList.get(index) == null)
-            ParseComponentFromString(componentList, strCompList, strCompList.get(index));
+            ParseComponentFromString(componentList, strCompList.get(index));
 
         return componentList.get(index);
     }
@@ -105,14 +106,14 @@ public class LoadLogic
         return parts;
     }
 
-    public static void ParseComponentFromString(List<LogicComponent> componentList, List<String> strCompList, String data)
+    public static void ParseComponentFromString(List<LogicComponent> componentList, String data)
     {
         List<String> parts = ParseParts(data);
 
         //System.out.println("Parsing component: " + data);
 
 
-
+        assert parts != null;
         int index = Integer.parseInt(parts.get(0));
         LogicComponent tempComp = new LogicComponent(MainRenderController.canvas.mainWindowRenderer);
         componentList.set(index, tempComp);
@@ -122,16 +123,17 @@ public class LoadLogic
             boolean basicState = Boolean.parseBoolean(parts.get(3));
 
             List<String> posParts = ParseParts(parts.get(4));
+            assert posParts != null;
             DPos pos = new DPos(Double.parseDouble(posParts.get(0)),Double.parseDouble(posParts.get(1)));
 
             List<String> inputStrs = ParseParts(parts.get(5));
             List<Boolean> inputBools = new ArrayList<>();
-            for (int i = 0; i < inputStrs.size(); i++)
+            for (int i = 0; i < Objects.requireNonNull(inputStrs).size(); i++)
                 inputBools.add(Boolean.parseBoolean(inputStrs.get(i)));
 
             List<String> outputStrs = ParseParts(parts.get(6));
             List<Boolean> outputBools = new ArrayList<>();
-            for (int i = 0; i < outputStrs.size(); i++)
+            for (int i = 0; i < Objects.requireNonNull(outputStrs).size(); i++)
                 outputBools.add(Boolean.parseBoolean(outputStrs.get(i)));
 
             tempComp.type = LogicComponent.GetCompTypeFromString(type);
@@ -149,13 +151,13 @@ public class LoadLogic
         else
         {
             System.out.println("ERR: NOT SUPPORTED YET");
-            return;
         }
     }
 
     static void ParseConnectionFromString(List<LogicComponent> componentList, List<String> strCompList, List<ComponentConnection> connectionList, String data)
     {
         List<String> parts = ParseParts(data);
+        assert parts != null;
         LogicComponent from = GetComponentFromIndex(componentList, strCompList, Integer.parseInt(parts.get(0)));
         int fromIndex = Integer.parseInt(parts.get(1));
         LogicComponent to = GetComponentFromIndex(componentList, strCompList, Integer.parseInt(parts.get(2)));
@@ -181,58 +183,26 @@ public class LoadLogic
         System.out.println(data);
         List<String> mainSaveParts = ParseParts(data);
 
-        //System.out.println("PARTS 1: " + mainSaveParts.get(0));
-        //System.out.println("PARTS 2: " + mainSaveParts.get(1));
-
         List<LogicComponent> comps = new ArrayList<>();
         List<ComponentConnection> conns = new ArrayList<>();
 
+        assert mainSaveParts != null;
         List<String> compParts = ParseParts(mainSaveParts.get(0));
         List<String> connParts = ParseParts(mainSaveParts.get(1));
 
         System.out.println("LOGIC GATES:");
-        for (int i = 0; i < compParts.size(); i++)
+        for (int i = 0; i < Objects.requireNonNull(compParts).size(); i++)
         {
             comps.add(null);
-            ParseComponentFromString(comps, compParts, compParts.get(i));
+            ParseComponentFromString(comps, compParts.get(i));
         }
 
         System.out.println("CONNECTIONS:");
-        for (int i = 0; i < connParts.size(); i++)
+        for (int i = 0; i < Objects.requireNonNull(connParts).size(); i++)
         {
             //ParseComponentFromString(comps, compParts, compParts.get(i));
             ParseConnectionFromString(comps, compParts, conns, connParts.get(i));
         }
-
-
-
-
-
-
-//
-//        List<LogicComponent> componentList = new ArrayList<>();
-//        for (int i = 0; i < mainSaveParts.size(); i++)
-//            componentList.add(null);
-//        for (int i = 0; i < mainSaveParts.size(); i++)
-//            ParseComponentFromString(componentList, mainSaveParts, mainSaveParts.get(i));
-//        for (int i = 0; i < mainSaveParts.size(); i++)
-//        {
-//            LogicComponent comp = componentList.get(i);
-//            for (int i1 = 0; i1 < comp.inputGates.size(); i1++)
-//            {
-//                if (comp.inputGates.get(i1) == null)
-//                    continue;
-//                //for (int)
-//            }
-//        }
-//        for (int i = 0; i < mainSaveParts.size(); i++)
-//        {
-//            System.out.println("UPDATING: " + i);
-//            System.out.println(componentList.get(i).inputCount);
-//
-//            componentList.get(i).UpdateGate();
-//        }
-
 
         MainRenderController.selectedComponent = null;
         MainRenderController.dragCable = false;

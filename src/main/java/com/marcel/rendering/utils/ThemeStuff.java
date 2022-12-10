@@ -4,17 +4,12 @@ import com.marcel.rendering.renderers.LogicComponent;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 public class ThemeStuff
 {
     public static List<String> supportedThemes = new ArrayList<>();
     public static String theme = "bright";
-
-
-    public static Dictionary<String, String> themeNames = new Hashtable<>();
 
     public static void init()
     {

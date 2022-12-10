@@ -10,6 +10,7 @@ public class Main {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
+    @SuppressWarnings("all")
     public static void main(String[] args)
     {
         ValidateStartupFileService.validateLocalResources();
@@ -27,7 +28,7 @@ public class Main {
         MainRenderController.allowDrawing = true;
         log.info("Running main...");
         MainRenderController.jFrame.setTitle(baseTitleText + " - " + "?" + " FPS");
-        while (true)
+        while (!MainRenderController.exit)
         {
             long startTime = System.currentTimeMillis();
             for (int i = 0; i < counter; i++)
@@ -49,5 +50,7 @@ public class Main {
             FPS = counter/dur;
             MainRenderController.jFrame.setTitle(baseTitleText + " - " + Math.round(FPS * 10)/10.0 + " FPS" + " - " + MainRenderController.canvas.mainWindowRenderer.logicGates.size() + " GATES");
         }
+
+        System.out.println("Exiting...");
     }
 }

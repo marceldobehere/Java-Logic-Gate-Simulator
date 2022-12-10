@@ -1,6 +1,5 @@
 package com.marcel.rendering.renderers;
 
-import com.marcel.Main;
 import com.marcel.rendering.CanvasThing;
 import com.marcel.rendering.MainRenderController;
 import com.marcel.rendering.utils.DPos;
@@ -19,9 +18,9 @@ public class MainWindowRenderer {
     public float scrollX = 0;
     public float scrollY = 0;
 
-    public float oldZoom = 1;
+    //public float oldZoom = 1;
 
-    public List<LogicComponent> logicGates = new ArrayList<LogicComponent>();
+    public List<LogicComponent> logicGates = new ArrayList<>();
     public List<ComponentConnection> connections = new ArrayList<>();
 
     public void init()
@@ -228,7 +227,7 @@ public class MainWindowRenderer {
 
 
             float h = img.getHeight(null) * zoomLevel;
-            float w = img.getWidth(null) * zoomLevel;
+            //float w = img.getWidth(null) * zoomLevel;
             float d = h / (gate.inputCount + 1);
             float y = 0;
 
@@ -299,7 +298,7 @@ public class MainWindowRenderer {
 
 
             float h = img.getHeight(null) * zoomLevel;
-            float w = img.getWidth(null) * zoomLevel;
+            //float w = img.getWidth(null) * zoomLevel;
             float d = h / (gate.inputCount + 1);
             float y = 0;
 

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 public final class ValidateStartupFileService {
 
@@ -19,13 +20,12 @@ public final class ValidateStartupFileService {
 
 
     public static void validateLocalResources() {
-        //if (configFolder.exists())
-        //    return;
+        if (!configFolder.mkdir())
+        {
+            log.debug("CONFIG FOLDER EXISTS");
+            //return;
+        }
 
-        //log.debug("Config Folder does not exist.");
-        log.debug("Config Folder does not exist. (TODO: Fix this)");
-
-        configFolder.mkdir();
         try {
             final File resourceFile = getLocalResources();
             FileUtils.copyDirectory(resourceFile, new File(configFolder, resourceFile.getName()), null, true, StandardCopyOption.REPLACE_EXISTING);
@@ -38,9 +38,9 @@ public final class ValidateStartupFileService {
 
     private static File getLocalResources() throws URISyntaxException {
         return new File(
-                Thread.currentThread()
-                        .getContextClassLoader()
-                        .getResource("internal")
+                Objects.requireNonNull(Thread.currentThread()
+                                .getContextClassLoader()
+                                .getResource("internal"))
                         .toURI()
         );
     }

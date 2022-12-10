@@ -30,7 +30,7 @@ public class CanvasThing extends JComponent
         if (sidebarRenderer.shrinkSidebar)
         {
             if (sidebarRenderer.sidebarWidth > 0)
-                sidebarRenderer.sidebarWidth -= deltaTime * (int)(sidebarRenderer.maxSidebarWidth * 5);
+                sidebarRenderer.sidebarWidth -= deltaTime * (sidebarRenderer.maxSidebarWidth * 5);
 
             if (sidebarRenderer.sidebarWidth < 0)
                 sidebarRenderer.sidebarWidth = 0;
@@ -38,7 +38,7 @@ public class CanvasThing extends JComponent
         else
         {
             if (sidebarRenderer.sidebarWidth < sidebarRenderer.maxSidebarWidth)
-                sidebarRenderer.sidebarWidth += deltaTime * (int)(sidebarRenderer.maxSidebarWidth * 5);
+                sidebarRenderer.sidebarWidth += deltaTime * (sidebarRenderer.maxSidebarWidth * 5);
 
             if (sidebarRenderer.sidebarWidth > sidebarRenderer.maxSidebarWidth)
                 sidebarRenderer.sidebarWidth = sidebarRenderer.maxSidebarWidth;
@@ -108,18 +108,11 @@ public class CanvasThing extends JComponent
         //System.out.println("DELTA: " + deltaTime);
 
         updateSizes();
-        if (!(g instanceof Graphics2D) || !MainRenderController.allowDrawing)
+        if (!(g instanceof Graphics2D g2) || !MainRenderController.allowDrawing)
             return;
-        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-
-//        g2.setColor(Color.DARK_GRAY);
-//        fillRectFromPoints(g2, windowX1, windowY1, windowX2, windowY2);
-//        g2.setColor(Color.ORANGE);
-//        g2.setStroke(new BasicStroke(2));
-//        g2.drawLine(windowX1, windowY1, windowX2, windowY2);
-
+        
         mainWindowRenderer.draw(g2);
         sidebarRenderer.draw(g2);
         topMenuRenderer.draw(g2);

@@ -13,7 +13,7 @@ public class SidebarRenderer
     public boolean shrinkSidebar;
     public Font sidebarFont = new Font(Font.SANS_SERIF, Font.BOLD, 25);
 
-    public Font defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 30);
+    //public Font defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 30);
     public Color defaultFontColor = new Color(20,20,40);
 
     public void init()
@@ -32,7 +32,7 @@ public class SidebarRenderer
 
         String text = "Logic Gates";
 
-        g2.drawString(text, mainRect.x1 + (int)((maxSidebarWidth - metrics.getStringBounds(text, (Graphics) g2).getWidth()) / 2), mainRect.y1 + 35);
+        g2.drawString(text, mainRect.x1 + (int)((maxSidebarWidth - metrics.getStringBounds(text, g2).getWidth()) / 2), mainRect.y1 + 35);
 
 
     }
